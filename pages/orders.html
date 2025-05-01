@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Manager</title>
+	<link rel="shortcut icon" type="image" href="assets/general/cyber.png">
+    <style>
+        body {
+            background-color: #121317;
+            color: #e2e2e2;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+		
+		.wallpaper {
+            background-image: url('assets/general/default-wallpaper.svg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .main-container {
+            width: 90%;
+            max-width: 1200px;
+            height: 90vh;
+            background-color: #1e212b;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background-color: #1e212b;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+		
+		.navbar a {
+            color: #2ed8a2;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #d1aff8;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .button-container button {
+            background-color: #2ed8a2;
+            border: none;
+            padding: 2px 5px;
+            border-radius: 3px;
+            color: #121317;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button-container button:hover {
+            background-color: #1b8a6b;
+        }
+
+        .content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 300px;
+            background-color: #282c34;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            border-right: 1px solid #444;
+        }
+
+        .order-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .order-list li {
+            padding: 12px;
+            margin: 6px 0;
+            background: #2e323b;
+            border: 1px solid #444;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, border 0.3s;
+        }
+
+        .order-list a {
+            color: #e2e2e2;
+            text-decoration: none;
+            display: block;
+        }
+
+        .order-list a:hover {
+            background-color: #444;
+        }
+
+        .content-container {
+            flex: 1;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            background-color: #1e212b;
+        }
+
+        .order-details {
+            display: none;
+        }
+
+        .order-details.active {
+            display: block;
+        }
+
+        .order-title {
+            font-size: 2em;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #444;
+            padding-bottom: 10px;
+            color: #2ed8a2;
+        }
+
+        .order-content {
+            font-size: 1.2em;
+            line-height: 1.4;
+            padding-top: 10px;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            color: #e2e2e2;
+        }
+		
+		.order-content a {
+			color: #2ed8a2;
+			text-decoration: none;
+		}
+		
+		.order-content a:hover {
+            color: #d1aff8;
+        }
+
+        .new-order-container {
+            padding: 5px;
+            background-color: #282c34;
+            border-radius: 8px;
+            border: 1px solid #444;
+        }
+
+        .new-order-container input, .new-order-container textarea {
+            width: calc(100% - 20px);
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #1e212b;
+            color: #e2e2e2;
+            font-size: 1em;
+            resize: vertical;
+        }
+
+        .new-order-container textarea {
+            height: 100px;
+        }
+
+        .new-order-container button {
+            background-color: #2ed8a2;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: #121317;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .new-order-container button:hover {
+            background-color: #1b8a6b;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .action-buttons button {
+            border: none;
+            padding: 1px;
+            cursor: pointer;
+        }
+
+        .icon {
+            width: 60px;
+            height: 30px;
+            vertical-align: middle;
+        }
+		
+		.top-icon {
+            width: 40px;
+            height: 30px;
+            vertical-align: middle;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: 50%;
+                position: relative;
+                border-bottom: 1px solid #444;
+            }
+
+            .content-container {
+                flex: 1;
+                width: 100%;
+            }
+
+            .content {
+                flex-direction: column;
+                overflow: auto;
+            }
+
+            .action-buttons {
+                justify-content: center;
+            }
+
+            .button-container {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+	<div class="wallpaper"></div>
+    <div class="main-container">
+        <div class="navbar">
+            <a href="../start.html"><b>Order Manager</b></a>
+            <div class="button-container">
+                <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="loadOrdersFromFile(event)">
+                <button onclick="document.getElementById('fileInput').click()"><img src="assets/notes-assets/read.svg" class="top-icon"></button>
+                <button onclick="downloadOrders()"><img src="assets/notes-assets/save.svg" class="top-icon"></button>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="sidebar">
+                <div class="new-order-container">
+                    <input type="text" id="new-order-title" placeholder="Название заказа">
+                    <textarea id="new-order-content" placeholder="Содержимое"></textarea>
+                    <input type="date" id="new-order-date">
+                    <div class="action-buttons">
+                        <button onclick="addOrder()"><img src="assets/notes-assets/add.svg" class="icon"></button>
+                        <button onclick="editOrder()"><img src="assets/notes-assets/edit.svg" class="icon"></button>
+                        <button onclick="deleteOrder()"><img src="assets/notes-assets/delete.svg" class="icon"></button>
+                    </div>
+                </div>
+                <ul class="order-list" id="order-list">
+                    <!-- Orders will be dynamically added here -->
+                </ul>
+            </div>
+            <div class="content-container">
+                <div class="order-details" id="order-details">
+                    <div class="order-title" id="order-title"></div>
+                    <div class="order-content" id="order-content"></div>
+                    <div class="order-date" id="order-date"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+		let orders = [];
+		let currentOrderIndex = -1;
+
+		function loadOrdersFromFile(event) {
+			const file = event.target.files[0];
+			if (!file) return;
+
+			const reader = new FileReader();
+			reader.onload = function(e) {
+				try {
+					orders = JSON.parse(e.target.result);
+					displayOrders();
+				} catch (error) {
+					alert('Ошибка при загрузке заказов');
+				}
+			};
+			reader.readAsText(file);
+		}
+
+		function addOrder() {
+			const title = document.getElementById('new-order-title').value;
+			const content = document.getElementById('new-order-content').value;
+			const date = document.getElementById('new-order-date').value;
+
+			if (title && content && date) {
+				orders.push({ title, content, date });
+				sortOrdersByDate();
+				displayOrders();
+				clearNewOrderFields();
+			}
+		}
+
+		function editOrder() {
+			if (currentOrderIndex === -1) return;
+			const title = document.getElementById('new-order-title').value;
+			const content = document.getElementById('new-order-content').value;
+			const date = document.getElementById('new-order-date').value;
+
+			if (title && content && date) {
+				orders[currentOrderIndex] = { title, content, date };
+				sortOrdersByDate();
+				displayOrders();
+				clearNewOrderFields();
+				currentOrderIndex = -1;
+			}
+		}
+
+		function deleteOrder() {
+			if (currentOrderIndex === -1) return;
+
+			orders.splice(currentOrderIndex, 1);
+			currentOrderIndex = -1;
+			displayOrders();
+			clearNewOrderFields();
+		}
+
+		function displayOrders() {
+			const orderList = document.getElementById('order-list');
+			orderList.innerHTML = '';
+
+			orders.forEach((order, index) => {
+				const li = document.createElement('li');
+				li.textContent = order.title + " (" + order.date + ")";
+				li.dataset.index = index;
+
+				li.addEventListener('click', () => showOrderDetails(index));
+
+				orderList.appendChild(li);
+			});
+
+			if (currentOrderIndex !== -1) {
+				updatePreview();
+			}
+		}
+
+		function showOrderDetails(index) {
+			const order = orders[index];
+			if (!order) return;
+
+			document.getElementById('new-order-title').value = order.title;
+			document.getElementById('new-order-content').value = order.content;
+			document.getElementById('new-order-date').value = order.date;
+			currentOrderIndex = index;
+
+			updatePreview();
+		}
+
+		function updatePreview() {
+			if (currentOrderIndex === -1) return;
+
+			const title = document.getElementById('new-order-title').value;
+			const content = document.getElementById('new-order-content').value;
+			const date = document.getElementById('new-order-date').value;
+
+			document.getElementById('order-title').textContent = title;
+			document.getElementById('order-content').innerHTML = formatContent(content); // Используем innerHTML
+			document.getElementById('order-date').textContent = `Дата: ${date}`;
+
+			document.getElementById('order-details').classList.add('active');
+		}
+
+		function clearNewOrderFields() {
+			document.getElementById('new-order-title').value = '';
+			document.getElementById('new-order-content').value = '';
+			document.getElementById('new-order-date').value = '';
+		}
+
+		function sortOrdersByDate() {
+			orders.sort((a, b) => new Date(a.date) - new Date(b.date));
+		}
+
+		function downloadOrders() {
+			const dataStr = JSON.stringify(orders, null, 2);
+			const blob = new Blob([dataStr], { type: "application/json" });
+			const url = URL.createObjectURL(blob);
+			const a = document.createElement('a');
+			a.href = url;
+			a.download = 'orders.json';
+			a.click();
+			URL.revokeObjectURL(url);
+		}
+
+		// Загружаем заказы из cookies при загрузке страницы
+		window.onload = function() {
+			const savedOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+			if (savedOrders.length > 0) {
+				orders = savedOrders;
+				sortOrdersByDate();
+				displayOrders();
+			}
+		};
+
+		// Сохраняем заказы в cookies при закрытии страницы
+		window.onbeforeunload = function() {
+			localStorage.setItem('orders', JSON.stringify(orders));
+		};
+
+		// Обновление предпросмотра при изменении содержимого заказа
+		document.getElementById('new-order-title').addEventListener('input', updatePreview);
+		document.getElementById('new-order-content').addEventListener('input', updatePreview);
+		document.getElementById('new-order-date').addEventListener('input', updatePreview);
+
+		// Форматирование содержимого заметки
+		function formatContent(content) {
+			let formattedContent = content;
+
+			// Автоматическое преобразование "текст (ссылка)" в гиперссылку
+			formattedContent = formattedContent.replace(/\[(.+?)\]\s?\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+			formattedContent = formattedContent.replace(/(\S+)\s\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+
+			// Преобразование "---" в "<hr>"
+			formattedContent = formattedContent.replace(/---/g, '<hr>');
+
+			// Преобразование "--" в длинное тире "—"
+			formattedContent = formattedContent.replace(/--/g, '—');
+
+			// Преобразование "* текст" в "<li>текст</li>"
+			formattedContent = formattedContent.replace(/^\* (.+)$/gm, '<li>$1</li>');
+
+			// Преобразование "**текст**" в "<strong>текст</strong>"
+			formattedContent = formattedContent.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+			// Преобразование "*текст*" в "<em>текст</em>"
+			formattedContent = formattedContent.replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+			// Преобразование "# заголовок" в "<h1>заголовок</h1>", "## заголовок" в "<h2>заголовок</h2>" и так далее
+			formattedContent = formattedContent.replace(/^(#{1,6})\s*(.+)$/gm, (match, hashes, title) => {
+				const level = hashes.length;
+				return `<h${level}>${title}</h${level}>`;
+			});
+
+			// Преобразование "```" в <pre><code>...</code></pre> для многострочного кода
+			formattedContent = formattedContent.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+
+			// Преобразование "`текст`" в "<code>текст</code>" для однострочного кода
+			formattedContent = formattedContent.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+			// Преобразование "![alt](url)" в "<img src='url' alt='alt' />"
+			formattedContent = formattedContent.replace(/!\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<img src="$2" alt="$1" />');
+
+			// Удаление всех остальных Markdown-символов (например, звездочек и нижних подчеркиваний)
+			formattedContent = formattedContent.replace(/(?:__|[*_])/g, '');
+
+			return formattedContent;
+		}
+	</script>
+</body>
+</html>

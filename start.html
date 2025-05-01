@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Page</title>
+    <link rel="shortcut icon" type="image" href="pages/assets/general/cyber.png">
+    <style>
+        body {
+            background-color: #121317;
+            color: #e2e2e2;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .wallpaper {
+            background-image: url('pages/assets/general/default-wallpaper.svg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1%;
+        }
+
+        .header .username {
+            color: #2ed8a2;
+        }
+
+        .header .browser-info {
+            color: #d1aff8;
+        }
+
+        .navbar {
+            background-color: #1e212b;
+            padding: 0px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+			border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .hamburger {
+            display: none; /* Скрыта по умолчанию */
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            background: #e2e2e2;
+            border-radius: 2px;
+            height: 3px;
+            margin: 3px 0;
+            width: 25px;
+        }
+
+        .nav-menu {
+            display: none; /* Скрыть меню по умолчанию */
+            flex-direction: column;
+            background-color: #1e212b;
+            position: absolute;
+            top: 50px;
+            width: 100%;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+
+        .nav-menu.active {
+            display: flex; /* Показать меню при наличии класса active */
+        }
+
+		.nav-menu li {
+			list-style: none;
+		}
+
+        .nav-menu li a {
+            text-align: center;
+            margin: 10px 0;
+			color: #2ed8a2;
+			text-decoration: none;
+            transition: color 0.3s;
+        }
+		
+		.nav-menu li a:hover {
+            color: #d1aff8;
+        }
+
+        .nav-menu a {
+            color: #e2e2e2;
+            text-decoration: none;
+            padding: 8px 15px;
+        }
+
+        .sections-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .section {
+            background-color: #1e212b;
+            padding: 15px;
+            border-radius: 5px;
+            width: 22%;
+            box-sizing: border-box;
+        }
+
+        .section h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.5em;
+        }
+
+        .section a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #e2e2e2;
+            margin: 5px 0;
+            padding: 5px;
+            transition: color 0.3s;
+        }
+
+        .section a:hover {
+            color: #d1aff8;
+        }
+
+        .section a img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        .prompt {
+            position: fixed;
+            bottom: 2%;
+            left: 20%;
+            width: calc(100% - 40%);
+            background-color: #16161e;
+            padding: 10px;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .prompt input {
+            width: 100%;
+            padding: 5px;
+            background: none;
+            border: none;
+            color: #e2e2e2;
+            outline: none;
+        }
+
+        .prompt .caret {
+            color: #2ed8a2;
+        }
+
+        .prompt .placeholder {
+            color: gray;
+        }
+
+        .help-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #c6f7e2;
+            font-size: 16px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .help-content {
+            background-color: #1e212b;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 80%;
+            max-height: 80%;
+            overflow-y: auto;
+        }
+
+        .help-content h2 {
+            color: #ff75c5;
+        }
+
+        .help-content ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .help-content ul li {
+            margin: 10px 0;
+        }
+		
+		/* Медиа-запросы для десктопов */
+        @media (min-width: 769px) {
+            .nav-menu {
+                display: flex; /* Показывать меню по умолчанию на больших экранах */
+                flex-direction: row;
+                position: static; /* Убирает абсолютное позиционирование */
+                background-color: transparent;
+                width: auto;
+                padding: 0;
+            }
+        }
+
+        /* Медиа-запросы для мобильных устройств */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex; /* Показ кнопки на мобильных */
+            }
+			
+			.hamburger span {
+				background: #e2e2e2;
+				border-radius: 2px;
+				height: 3px;
+				margin: 3px 0;
+				width: 25px;
+			}
+			
+			.navbar {
+				background-color: #1e212b;
+				padding: 10px 20px;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				position: sticky;
+				top: 0;
+			}
+
+            .nav-menu {
+				display: none; /* Скрыто по умолчанию */
+				flex-direction: column;
+				background-color: #1e212b;
+				position: absolute;
+				left: 15%;
+				top: 50px;
+				width: 70%;
+				padding: 10px 0;
+				border: 2px dotted green;
+			}
+
+			.nav-menu.active {
+				display: flex; /* Показ при наличии active */
+			}
+
+			.nav-menu li {
+				list-style: none;
+				text-align: center;
+				margin: 10px 0;
+			}
+			
+			.nav-menu a {
+				color: #e2e2e2;
+				text-decoration: none;
+				padding: 8px 15px;
+			}
+			
+			.container {
+                padding: 10px;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .sections-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .section {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            .section h2 {
+                font-size: 1.2em;
+            }
+            .section a {
+                font-size: 0.9em;
+            }
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #c6f7e2;
+            font-size: 16px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .overlay-content {
+            background-color: #1e212b;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 80%;
+            max-height: 80%;
+            overflow-y: auto;
+        }
+
+        .overlay-content h2 {
+            color: #ff75c5;
+        }
+
+        .overlay-content p {
+            margin: 10px 0;
+        }
+		
+		.overlay a {
+            text-decoration: none;
+            color: #2ed8a2;
+            transition: color 0.3s;
+        }
+
+        .overlay a:hover {
+            color: #d1aff8;
+        }
+
+        .custom-hr {
+            border: 0;
+            height: 2px;
+            background: #545454;
+            margin: 2px 0;
+        }
+		
+		.audio-player {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 10px;
+			margin-top: 10px;
+		}
+
+		.audio-player button {
+			background-color: #1e212b;
+			color: #e2e2e2;
+			border: none;
+			padding: 10px;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.3s;
+		}
+
+		.audio-player button:hover {
+			background-color: #2ed8a2;
+		}
+    </style>
+</head>
+<body>
+    <div class="wallpaper"></div>
+    <div class="container">
+        <div class="navbar">
+			<div class="browser-info"><span id="os-version"></span> | <span id="browser-engine"></span></div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+				<li><a href="pages/vmess_ss-to-json.html" target="_blank">Mess</a></li>
+				<li><a href="pages/netscan.html" target="_blank">NetScan</a></li>
+				<li><a href="pages/dorks.html" target="_blank">Dorks</a></li>
+				<li><a href="pages/notes.html" target="_blank">Notes</a></li>
+				<li><a href="pages/orders.html" target="_blank">Orders</a></li>
+            </ul>
+			<div class="time"><span id="time"></span></div>
+        </div>
+		<div class="header">
+        </div>
+
+        <div class="sections-container">
+            
+        </div>
+
+        <div class="prompt">
+            <span class="caret"><div class="username">username@<span id="browser-name">host</span> ❯</span></div>
+            <input type="text" placeholder="command..." id="commandInput">
+            <div class="placeholder" id="suggestionPlaceholder"></div>
+        </div>
+    </div>
+	
+	<div class="overlay" id="infoOverlay">
+        <div class="overlay-content">
+            <h2>Информация о соединении</h2>
+            <p id="info-text">Загрузка...</p>
+        </div>
+    </div>
+
+    <div class="help-overlay" id="helpOverlay" style="display: none;">
+		<div class="help-content"></div>
+	</div>
+
+<script src="main.js"></script>
+<script src="sectionsData.js"></script>
+<script src="commandsData.js"></script>
+<script src="tracksData.js"></script>
+</body>
+</html>

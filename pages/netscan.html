@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Scan</title>
+    <link rel="shortcut icon" type="image/png" href="assets/general/cyber.png">
+    <style>
+        body {
+            background-color: #121317;
+            color: #e2e2e2;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+		.wallpaper {
+            background-image: url('assets/general/default-wallpaper.svg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+		
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h3 a {
+            color: #2ed8a2;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        h3 a:hover {
+            color: #d1aff8;
+        }
+
+        .table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .table th, .table td {
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .table th {
+            background-color: #1e212b;
+            color: #2ed8a2;
+        }
+
+        .table td {
+            background-color: #1e212b;
+        }
+
+        .table ul {
+			list-style-type: none;
+			padding: 0;
+		}
+
+		.table ul li {
+			margin-bottom: 15px; 
+			padding-bottom: 10px; 
+			border-bottom: 1px solid #444; 
+			padding-left: 10px; /* Отступ слева */
+		}
+
+		.table ul ul {
+			margin-top: 10px; /* Отступ сверху для подсписков */
+		}
+
+		.table ul ul li {
+			padding-left: 0; /* Убираем отступ у подсписков */
+		}
+
+		.table ul li:has(ul) {
+			padding: 10px; /* Внутренний отступ */
+			background-color: #282c34; /* Фоновый цвет для разделов с подсписками */
+			border-radius: 5px; /* Закругление углов */
+			border: 1px solid #444; /* Граница */
+			margin-bottom: 20px; /* Дополнительный отступ снизу для разделения */
+		}
+
+		.table a {
+			color: #e2e2e2;
+			text-decoration: none;
+			transition: color 0.3s;
+		}
+
+		.table a:hover {
+			color: #d1aff8;
+		}
+		
+		@media (max-width: 768px) {
+            body {
+                display: block;
+                padding: 10px;
+            }
+
+            .table-container {
+                padding: 10px;
+            }
+
+            .table th, .table td {
+                padding: 8px;
+                display: block;
+                width: 90%;
+                box-sizing: border-box;
+            }
+
+            .table ul li {
+                margin-bottom: 10px;
+                padding-bottom: 8px;
+            }
+
+            .table ul li:has(ul) {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+	<div class="wallpaper"></div>
+    <div class="container">
+        <h3><a href="../start.html">nmap -oX - -p [port] [domain] </a></h3>
+        <figure class="table">
+			<table>
+				<tbody>
+					<tr>
+						<td>Порт</td>
+						<td>Протокол</td>
+						<td>Описание</td>
+						<td>Команды</td>
+					</tr>
+					<tr>
+						<td>
+							<ul>
+								<li>21</li>
+								<li>22</li>
+								<li>23</li>
+								<li>25</li>
+								<li>53</li>
+								<li>80</li>
+								<li>110</li>
+								<li>115</li>
+								<li>135</li>
+								<li>139</li>
+								<li>143</li>
+								<li>194</li>
+								<li>443</li>
+								<li>445</li>
+								<li>1433</li>
+								<li>3306</li>
+								<li>3389</li>
+								<li>5432</li>
+								<li>5632</li>
+								<li>5900</li>
+							</ul>
+						</td>
+						<td>
+							<ul>
+								<li>FTP</li>
+								<li>SSH</li>
+								<li>Telnet</li>
+								<li>SMTP</li>
+								<li>DNS</li>
+								<li>HTTP</li>
+								<li>POP3</li>
+								<li>SFTP</li>
+								<li>RPC</li>
+								<li>NetBIOS</li>
+								<li>IMAP</li>
+								<li>IRC</li>
+								<li>SSL</li>
+								<li>SMB</li>
+								<li>MSSQL</li>
+								<li>MySQL</li>
+								<li>Remote Desktop</li>
+								<li>PostgreSQL</li>
+								<li>PCAnywhere</li>
+								<li>VNC</li>
+							</ul>
+						</td>
+						<td>
+							<ul>
+								<li>Протокол передачи файлов</li>
+								<li>Безопасное удалённое подключение</li>
+								<li>Удалённое управление через командную строку</li>
+								<li>Передача электронной почты</li>
+								<li>Служба доменных имен</li>
+								<li>Веб-протокол для передачи гипертекста</li>
+								<li>Протокол получения электронной почты</li>
+								<li>Безопасная передача файлов</li>
+								<li>Удалённый вызов процедур</li>
+								<li>Сетевой сервис для совместного использования ресурсов</li>
+								<li>Протокол доступа к электронной почте</li>
+								<li>Интернет-чат</li>
+								<li>Защищённый веб-протокол</li>
+								<li>Протокол общего доступа к файлам и принтерам</li>
+								<li>Сервер базы данных Microsoft SQL</li>
+								<li>Сервер базы данных MySQL</li>
+								<li>Удалённый рабочий стол Windows</li>
+								<li>Сервер базы данных PostgreSQL</li>
+								<li>Удалённый доступ PCAnywhere</li>
+								<li>Удалённое управление VNC</li>
+							</ul>
+						</td>
+						<td>
+							<ul>
+								<li>Change banner: nmap -sV --script=banner &lt;target&gt;</li>
+								<li>Холостое сканирование: --script ipidseq</li>
+								<li>Открыть сессию telnet: telnet &lt;IP&gt;</li>
+								<li>Проверить доступность SMTP: telnet &lt;IP&gt; 25</li>
+								<li>Запрос к DNS: nslookup &lt;IP/домен&gt;</li>
+								<li>Тестирование веб-сервера: curl -I http://&lt;IP&gt;</li>
+								<li>Подключение к почтовому серверу: telnet &lt;IP&gt; 110</li>
+								<li>SFTP подключение: sftp user@&lt;IP&gt;</li>
+								<li>Сканирование RPC: rpcinfo -p &lt;IP&gt;</li>
+								<li>Сканирование NetBIOS: nmblookup -A &lt;IP&gt;</li>
+								<li>Подключение к IMAP: telnet &lt;IP&gt; 143</li>
+								<li>Подключение к IRC: irc &lt;server&gt;</li>
+								<li>Проверка SSL: openssl s_client -connect &lt;IP&gt;:443</li>
+								<li>Подключение к SMB: smbclient -L &lt;IP&gt;</li>
+								<li>Подключение к MSSQL: sqsh -S &lt;IP&gt; -U &lt;user&gt;</li>
+								<li>Подключение к MySQL: mysql -h &lt;IP&gt;</li>
+								<li>Подключение к RDP: rdesktop &lt;IP&gt;</li>
+								<li>Подключение к PostgreSQL: psql -h &lt;IP&gt;</li>
+								<li>Подключение к PCAnywhere: pcanywhere &lt;IP&gt;</li>
+								<li>Подключение к VNC: vncviewer &lt;IP&gt;</li>
+							</ul>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</figure>
+    </div>
+</body>
+</html>

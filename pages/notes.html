@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note Manager</title>
+    <link rel="shortcut icon" type="image/png" href="assets/general/cyber.png">
+    <style>
+        body {
+            background-color: #121317;
+            color: #e2e2e2;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .wallpaper {
+            background-image: url('assets/general/default-wallpaper.svg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .main-container {
+            width: 90%;
+            max-width: 1200px;
+            height: 90vh;
+            background-color: #1e212b;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background-color: #1e212b;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #2ed8a2;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #d1aff8;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .button-container button {
+            background-color: #2ed8a2;
+            border: none;
+            padding: 2px 5px;
+            border-radius: 3px;
+            color: #121317;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button-container button:hover {
+            background-color: #d1aff8;
+        }
+
+        .content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+			width: 300px;
+			background-color: #282c34;
+			padding: 20px;
+			box-sizing: border-box;
+			overflow-y: auto;
+			border-right: 1px solid #444;
+		}
+
+		.sidebar h2 {
+			margin-top: 0;
+			margin-bottom: 20px;
+			color: #e2e2e2;
+		}
+
+        .notes-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .notes-list li {
+			padding: 12px;
+			margin: 6px 0;
+			background: #2e323b;
+			border: 1px solid #444;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.3s, border 0.3s;
+		}
+
+		.notes-list li.dragging {
+			opacity: 0.5;
+		}
+
+		.notes-list li.over {
+			border: 2px dashed #2ed8a2;
+		}
+
+		.notes-list a {
+			color: #e2e2e2;
+			text-decoration: none;
+			padding: 12px;
+			display: block;
+			border-radius: 5px;
+			transition: background-color 0.3s;
+		}
+
+		.notes-list a:hover {
+			background-color: #444;
+		}
+
+        .content-container {
+            flex: 1;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            background-color: #1e212b;
+        }
+
+        .note-details {
+            display: none;
+        }
+
+        .note-details.active {
+            display: block;
+        }
+
+        .note-title {
+			font-size: 2em;
+			margin-bottom: 10px;
+			border-bottom: 2px solid #444;
+			padding-bottom: 10px;
+			color: #2ed8a2;
+		}
+
+		.note-content {
+			font-size: 1.2em;
+			line-height: 1.2;
+			padding-top: 10px;
+			word-wrap: break-word;
+			white-space: pre-wrap;
+			color: #e2e2e2;
+		}
+
+		.note-content li {
+			margin: 0;
+			padding: 0px 0; /* Уменьшение внутреннего отступа */
+			line-height: 0.1; /* Уменьшение межстрочного интервала */
+		}
+
+		.note-content ul, .note-content ol {
+			padding-left: 10px;
+			margin: 10px 0;
+			line-height: 1.2; /* Уменьшение межстрочного интервала */
+		}
+
+		.list-group {
+			margin: 15px 0; /* Немного уменьшили отступ между группами */
+			padding: 7px;
+			background-color: #282c34;
+			border-radius: 5px;
+		}
+
+		.note-content hr {
+			margin: 10px 0; /* Уменьшаем отступы сверху и снизу */
+			border: none;
+			border-top: 1px solid #444; /* Тонкая граница для разделения */
+		}
+		
+		.note-content p {
+			margin: 10px 0;
+		}
+
+		.note-content h2, .note-content h3 {
+			margin: 20px 0 10px;
+			color: #d1aff8;
+		}
+
+		.note-content a {
+			color: #2ed8a2;
+			text-decoration: none;
+		}
+		
+		.note-content a:hover {
+            color: #d1aff8;
+        }
+
+		.note-content code {
+			background-color: #282c34; /* Цвет фона блока кода */
+			color: #2ed8a2;            /* Цвет текста кода */
+			padding: 2px 4px;          /* Внутренние отступы вокруг текста кода */
+			border-radius: 4px;        /* Скругление углов */
+			font-family: monospace;    /* Шрифт для кода */
+			font-size: 0.9em;          /* Размер шрифта (чуть меньше стандартного) */
+		}
+
+		/* Стили для блока кода, который занимает несколько строк */
+		.note-content pre {
+			background-color: #282c34; /* Цвет фона блока кода */
+			color: #e2e2e2;            /* Цвет текста кода */
+			padding: 10px;             /* Внутренние отступы вокруг текста кода */
+			border-radius: 4px;        /* Скругление углов */
+			overflow-x: auto;          /* Горизонтальная прокрутка, если текст не умещается */
+			white-space: pre;          /* Сохранение пробелов и переноса строк */
+			font-family: monospace;    /* Шрифт для кода */
+			margin: 10px 0;            /* Внешние отступы для разделения блоков кода */
+			font-size: 0.9em;          /* Размер шрифта (чуть меньше стандартного) */
+			line-height: 1.4;          /* Интервал между строками */
+		}
+
+        .new-note-container {
+			padding: 5px;
+			background-color: #282c34;
+			border-radius: 8px;
+			border: 1px solid #444;
+		}
+
+		.new-note-container input, .new-note-container textarea {
+			width: calc(100% - 20px);
+			margin: 5px 0;
+			padding: 10px;
+			border: 1px solid #444;
+			border-radius: 5px;
+			background-color: #1e212b;
+			color: #e2e2e2;
+			font-size: 1em;
+			resize: vertical;
+		}
+
+		.new-note-container textarea {
+			height: 200px;
+		}
+
+		.new-note-container button {
+			background-color: #2ed8a2;
+			border: none;
+			padding: 10px 20px;
+			border-radius: 5px;
+			color: #121317;
+			cursor: pointer;
+			transition: background-color 0.3s;
+		}
+
+		.new-note-container button:hover {
+			background-color: #1b8a6b;
+		}
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .action-buttons button {
+            border: none;
+            padding: 1px;
+            cursor: pointer;
+        }
+
+        .icon {
+            width: 60px;
+            height: 30px;
+            vertical-align: middle;
+        }
+		
+		.top-icon {
+            width: 40px;
+            height: 30px;
+            vertical-align: middle;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: 50%;
+                position: relative;
+                border-bottom: 1px solid #444;
+            }
+
+            .content-container {
+                flex: 1;
+                width: 100%;
+            }
+
+            .content {
+                flex-direction: column;
+                overflow: auto;
+            }
+
+            .action-buttons {
+                justify-content: center;
+            }
+
+            .button-container {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wallpaper"></div>
+    <div class="main-container">
+        <div class="navbar">
+            <a href="../start.html"><b>Note Manager</b></a>
+            <div class="button-container">
+                <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="loadNotesFromFile(event)">
+                <button onclick="document.getElementById('fileInput').click()"><img src="assets/notes-assets/read.svg" class="top-icon"></button>
+                <button onclick="downloadNotes()"><img src="assets/notes-assets/save.svg" class="top-icon"></button>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="sidebar">
+                <div class="new-note-container">
+                    <input type="text" id="new-note-title" placeholder="Title">
+                    <textarea id="new-note-content" placeholder="Content"></textarea>
+                    <div class="action-buttons">
+                        <button onclick="addNote()"><img src="assets/notes-assets/add.svg" class="icon"></button>
+                        <button onclick="editNote()"><img src="assets/notes-assets/edit.svg" class="icon"></button>
+                        <button onclick="deleteNote()"><img src="assets/notes-assets/delete.svg" class="icon"></button>
+                    </div>
+                </div>
+                <ul class="notes-list" id="notes-list">
+                    <!-- Note titles will be dynamically added here -->
+                </ul>
+            </div>
+
+            <div class="content-container">
+                <div class="note-details" id="note-details">
+                    <div class="note-title" id="note-title"></div>
+                    <div class="note-content" id="note-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+		let notes = [];
+		let currentNoteIndex = -1;
+
+		// Загрузка заметок из файла
+		function loadNotesFromFile(event) {
+			const file = event.target.files[0];
+			if (!file) return;
+
+			const reader = new FileReader();
+			reader.onload = function(e) {
+				try {
+					notes = JSON.parse(e.target.result);
+					displayNotes();
+				} catch (error) {
+					alert('Ошибка при загрузке заметок');
+				}
+			};
+			reader.readAsText(file);
+		}
+
+		// Добавление новой заметки
+		function addNote() {
+			const title = document.getElementById('new-note-title').value;
+			const content = document.getElementById('new-note-content').value;
+
+			if (title && content) {
+				notes.push({ title, content });
+				displayNotes();
+				clearNewNoteFields();
+			}
+		}
+
+		// Редактирование текущей заметки
+		function editNote() {
+			if (currentNoteIndex === -1) return;
+			const title = document.getElementById('new-note-title').value;
+			const content = document.getElementById('new-note-content').value;
+
+			if (title && content) {
+				notes[currentNoteIndex] = { title, content };
+				displayNotes();
+				clearNewNoteFields();
+				currentNoteIndex = -1;
+			}
+		}
+
+		// Удаление текущей заметки
+		function deleteNote() {
+			if (currentNoteIndex === -1) return;
+
+			notes.splice(currentNoteIndex, 1);
+			currentNoteIndex = -1;
+			displayNotes();
+			clearNewNoteFields();
+		}
+
+		// Отображение списка заметок
+		function displayNotes() {
+			const notesList = document.getElementById('notes-list');
+			notesList.innerHTML = '';
+
+			notes.forEach((note, index) => {
+				const li = document.createElement('li');
+				li.textContent = note.title;
+				li.draggable = true;
+				li.dataset.index = index; // Сохраняем индекс заметки в data-атрибуте
+
+				// Обработчики событий для перетаскивания
+				li.addEventListener('dragstart', handleDragStart);
+				li.addEventListener('dragover', handleDragOver);
+				li.addEventListener('drop', handleDrop);
+				li.addEventListener('dragend', handleDragEnd);
+
+				// Обработчик клика для выбора заметки
+				li.addEventListener('click', () => showNoteDetails(index));
+
+				notesList.appendChild(li);
+			});
+
+			if (currentNoteIndex !== -1) {
+				updatePreview();
+			}
+		}
+
+		function handleDragStart(event) {
+			event.dataTransfer.setData('text/plain', event.target.dataset.index);
+			event.target.classList.add('dragging');
+		}
+
+		function handleDragOver(event) {
+			event.preventDefault(); // Разрешаем сброс
+			event.target.classList.add('over');
+		}
+
+		function handleDrop(event) {
+			event.preventDefault();
+			const oldIndex = event.dataTransfer.getData('text/plain');
+			const newIndex = event.target.dataset.index;
+
+			// Перемещение заметки в массиве
+			const [movedNote] = notes.splice(oldIndex, 1);
+			notes.splice(newIndex, 0, movedNote);
+
+			displayNotes(); // Обновляем отображение списка
+		}
+
+		function handleDragEnd(event) {
+			event.target.classList.remove('dragging');
+			document.querySelectorAll('.notes-list li').forEach(li => li.classList.remove('over'));
+		}
+
+		// Показ деталей выбранной заметки
+		function showNoteDetails(index) {
+			const note = notes[index];
+			if (!note) return;
+
+			document.getElementById('note-title').textContent = note.title;
+			document.getElementById('note-content').innerHTML = formatContent(note.content);
+			document.getElementById('note-details').classList.add('active');
+
+			document.getElementById('new-note-title').value = note.title;
+			document.getElementById('new-note-content').value = note.content;
+
+			currentNoteIndex = index;
+		}
+
+		// Очистка полей для новой заметки
+		function clearNewNoteFields() {
+			document.getElementById('new-note-title').value = '';
+			document.getElementById('new-note-content').value = '';
+		}
+
+		// Сохранение заметок в файл
+		function downloadNotes() {
+			const data = JSON.stringify(notes);
+			const blob = new Blob([data], { type: 'application/json' });
+			const url = URL.createObjectURL(blob);
+			const a = document.createElement('a');
+			a.href = url;
+			a.download = 'notes.json';
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
+		}
+
+		// Добавление гиперссылки
+		function addHyperlink() {
+			const textarea = document.getElementById('new-note-content');
+			const selectedText = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
+
+			if (selectedText) {
+				const url = prompt('Введите URL:');
+				if (url) {
+					const newContent = `<a href="${url}" target="_blank">${selectedText}</a>`;
+					replaceSelection(newContent);
+				}
+			}
+		}
+
+		// Выделение текста как код
+		function highlightCode() {
+			const textarea = document.getElementById('new-note-content');
+			const selectedText = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
+
+			if (selectedText) {
+				const newContent = `<code>${selectedText}</code>`;
+				replaceSelection(newContent);
+			}
+		}
+		
+		// Выделение текста как блок кода
+		function highlightCodeBlock() {
+			const textarea = document.getElementById('new-note-content');
+			const selectedText = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
+
+			if (selectedText) {
+				const newContent = `<pre>${selectedText}</pre>`;
+				replaceSelection(newContent);
+			}
+		}
+
+		// Выделение текста жирным
+		function makeBold() {
+			const textarea = document.getElementById('new-note-content');
+			const selectedText = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
+
+			if (selectedText) {
+				const newContent = `<strong>${selectedText}</strong>`;
+				replaceSelection(newContent);
+			}
+		}
+
+		// Выделение текста наклонным
+		function makeItalic() {
+			const textarea = document.getElementById('new-note-content');
+			const selectedText = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
+
+			if (selectedText) {
+				const newContent = `<em>${selectedText}</em>`;
+				replaceSelection(newContent);
+			}
+		}
+
+		// Удаление всего форматирования
+		function removeAllFormatting() {
+			const textarea = document.getElementById('new-note-content');
+			const start = textarea.selectionStart;
+			const end = textarea.selectionEnd;
+
+			let text = textarea.value;
+			let selectedText = text.substring(start, end);
+
+			// Удаление всех тегов форматирования
+			const unformattedText = selectedText
+				.replace(/<\/?strong>/g, '')  // Жирный
+				.replace(/<\/?em>/g, '')      // Наклонный
+				.replace(/<\/?code>/g, '')    // Код
+				.replace(/<\/?pre>/g, '')    // Блок кода
+				.replace(/<\/?a[^>]*>/g, ''); // Гиперссылка
+
+			textarea.value = text.slice(0, start) + unformattedText + text.slice(end);
+			textarea.selectionStart = start + unformattedText.length;
+			textarea.selectionEnd = start + unformattedText.length;
+			textarea.focus();
+			updatePreview();
+		}
+
+		// Замена выделенного текста на форматированный текст
+		function replaceSelection(content) {
+			const textarea = document.getElementById('new-note-content');
+			const start = textarea.selectionStart;
+			const end = textarea.selectionEnd;
+
+			const text = textarea.value;
+			textarea.value = text.slice(0, start) + content + text.slice(end);
+			textarea.selectionStart = start + content.length;
+			textarea.selectionEnd = start + content.length;
+			textarea.focus();
+
+			updatePreview();
+		}
+
+		// Форматирование содержимого заметки
+		function formatContent(content) {
+			// Преобразуем разметку Markdown или другой формат в HTML
+			let formattedContent = content;
+			
+			// Автоматическое преобразование "текст (ссылка)" в гиперссылку
+			formattedContent = formattedContent.replace(/\[(.+?)\]\s?\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+			formattedContent = formattedContent.replace(/(\S+)\s\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+
+			// Преобразование "---" в "<hr>"
+			formattedContent = formattedContent.replace(/---/g, '<hr>');
+			
+			// Преобразование "--" в длинное тире "—"
+			formattedContent = formattedContent.replace(/--/g, '—');
+
+			// Преобразование "* текст" в "<li>текст</li>"
+			formattedContent = formattedContent.replace(/^\* (.+)$/gm, '<li>$1</li>');
+
+			// Дополнительные преобразования
+			formattedContent = formattedContent.replace(/(?:__|[*#])|\[(.*?)\]\(.*?\)/gm, ''); // Пример преобразования Markdown
+
+			return formattedContent;
+		}
+
+		// Обновление предпросмотра
+		function updatePreview() {
+			if (currentNoteIndex !== -1) {
+				notes[currentNoteIndex].content = document.getElementById('new-note-content').value;
+				document.getElementById('note-content').innerHTML = formatContent(notes[currentNoteIndex].content);
+			}
+		}
+
+		// Обновление предпросмотра при любом изменении в textarea
+		document.getElementById('new-note-content').addEventListener('input', updatePreview);
+
+		// Обработка нажатий клавиш для форматирования
+		document.addEventListener('keydown', function(event) {
+			if (event.altKey && event.key === 'k') {
+				event.preventDefault();
+				addHyperlink();
+			} else if (event.altKey && event.key === 'p') {
+				event.preventDefault();
+				highlightCodeBlock();
+			} else if (event.altKey && event.key === 'h') {
+				event.preventDefault();
+				highlightCode();
+			} else if (event.altKey && event.key === 'b') {
+				event.preventDefault();
+				makeBold();
+			} else if (event.altKey && event.key === 'i') {
+				event.preventDefault();
+				makeItalic();
+			} else if (event.ctrlKey && event.altKey) {
+				event.preventDefault();
+				removeAllFormatting();
+			}
+		});
+	</script>
+</body>
+</html>

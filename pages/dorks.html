@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Dorks</title>
+    <link rel="shortcut icon" type="image/png" href="assets/general/cyber.png">
+    <style>
+        body {
+            background-color: #121317;
+            color: #e2e2e2;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+		.wallpaper {
+            background-image: url('assets/general/default-wallpaper.svg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+		
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h3 a {
+            color: #2ed8a2;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        h3 a:hover {
+            color: #d1aff8;
+        }
+
+        .table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .table th, .table td {
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .table th {
+            background-color: #1e212b;
+            color: #2ed8a2;
+        }
+
+        .table td {
+            background-color: #1e212b;
+        }
+
+        .table ul {
+			list-style-type: none;
+			padding: 0;
+		}
+
+		.table ul li {
+			margin-bottom: 15px; 
+			padding-bottom: 10px; 
+			border-bottom: 1px solid #444; 
+			padding-left: 10px; /* Отступ слева */
+		}
+
+		.table ul ul {
+			margin-top: 10px; /* Отступ сверху для подсписков */
+		}
+
+		.table ul ul li {
+			padding-left: 0; /* Убираем отступ у подсписков */
+		}
+
+		.table ul li:has(ul) {
+			padding: 10px; /* Внутренний отступ */
+			background-color: #282c34; /* Фоновый цвет для разделов с подсписками */
+			border-radius: 5px; /* Закругление углов */
+			border: 1px solid #444; /* Граница */
+			margin-bottom: 20px; /* Дополнительный отступ снизу для разделения */
+		}
+
+		.table a {
+			color: #e2e2e2;
+			text-decoration: none;
+			transition: color 0.3s;
+		}
+
+		.table a:hover {
+			color: #d1aff8;
+		}
+		
+		@media (max-width: 768px) {
+            body {
+                display: block;
+                padding: 10px;
+            }
+
+            .table-container {
+                padding: 10px;
+            }
+
+            .table th, .table td {
+                padding: 8px;
+                display: block;
+                width: 90%;
+                box-sizing: border-box;
+            }
+
+            .table ul li {
+                margin-bottom: 10px;
+                padding-bottom: 8px;
+            }
+
+            .table ul li:has(ul) {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+	<div class="wallpaper"></div>
+    <div class="container">
+        <h3><a href="../start.html">Google Dorks</a></h3>
+        <figure class="table">
+            <table>
+                <tbody>
+                    <tr>
+                        <td>Оператор</td>
+                        <td>Описание</td>
+                        <td>Синтаксис</td>
+						<td>Пример</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <ul>
+                                <li>()</li>
+								<li>*</li>
+								<li>""</li>
+								<li>m..n</li>
+								<li>-</li>
+								<li>+</li>
+								<li>|</li>
+								<li>~</li>
+								<li>@</li>
+								<li>after</li>
+								<li>before</li>
+								<li>allintitle</li>
+								<li>allinurl</li>
+								<li>allintext</li>
+								<li>AROUND</li>
+								<li>author</li>
+								<li>cache</li>
+								<li>contains</li>
+								<li>date</li>
+								<li>define</li>
+								<li>ext</li>
+								<li>inanchor</li>
+								<li>index of</li>
+								<li>info</li>
+								<li>link(s)</li>
+								<li>location</li>
+								<li>phonebook</li>
+								<li>relate(d)</li>
+								<li>safesearch</li>
+								<li>source</li>
+								<li>site</li>
+								<li>stock</li>
+								<li>weather</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>Группирует несколько условий / операторов</li>
+								<li>Wildcard. Подбирает любое слово</li>
+								<li>Точное совпадение. Нечувствительно к регистру</li>
+								<li>Поиск диапазона чисел (n > m)</li>
+								<li>Оператор исключения</li>
+								<li>Оператор добавления</li>
+								<li>Логическое ИЛИ (как <b>OR</b>)</li>
+								<li>Поиск синонимов слова (не в Google)</li>
+								<li>Поиск только в заданной социальной сети</li>
+								<li>Поиск документов опубликованных / проиндексированных после заданной даты</li>
+								<li>Поиск документов опубликованных / проиндексированных после заданной даты</li>
+								<li>Как <b>intitle</b>, но позволяет использовать несколько ключевых слов через пробел</li>
+								<li>Как <b>inurl</b>, но позволяет использовать несколько ключевых слов через пробел</li>
+								<li>Как <b>intext</b>, но позволяет использовать несколько ключевых слов через пробел</li>
+								<li>Поиск документов, в которых первое слово находится на расстоянии до n слов от второго</li>
+								<li>Поиск статей, написанных заданным автором</li>
+								<li>Поиск кэшированной версии сайта (использует Google кэш)</li>
+								<li>Поиск документов, которые ссылаются на данный тип файла (не в Google)</li>
+								<li>Поиск документов, опубликованных в течение прошлых <b>n</b> месяцев (не в Google)</li>
+								<li>Поиск определения заданного слова</li>
+								<li>Поиск файла заданного типа (как <b>filetype</b>)</li>
+								<li>Поиск заданного слова в ссылках сайта</li>
+								<li>Поиск документов, содержащих прямые загрузки</li>
+								<li>Поиск информации о сайте</li>
+								<li>Поиск документов, чьи ссылки содержат заданное слово</li>
+								<li>Показывает документы на основе заданного местоположения</li>
+								<li>Поиск телефонных номеров, связанных с данным именем</li>
+								<li>Поиск документов, связанных с заданным сайтом</li>
+								<li>Исключает контент для взрослых</li>
+								<li>Поиск по конкретному новостному сайту (лучше использовать <b>site</b>)</li>
+								<li>Поиск на заданном сайте, можно использовать просто TLD (com, net, ...)</li>
+								<li>Поиск информации о фондовом рынке</li>
+								<li>Поиск информации о погоде в заданной локации</li>
+							</ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>([term] or [operator])</li>
+								<li>[text] * [text]</li>
+								<li>"[keywords]"</li>
+								<li>[number]..[number]</li>
+								<li>-[operator]</li>
+								<li>+[operator]</li>
+								<li>[operator] | [operator]</li>
+								<li>~[word]</li>
+								<li>@[socialmedia]</li>
+								<li>after:[yy(-mm-dd)]</li>
+								<li>before:[yy(-mm-dd)]</li>
+								<li>allintitle:[keywords]</li>
+								<li>allinurl:[keywords]</li>
+								<li>allintext:[keywords]</li>
+								<li>[w1] AROUND(n) [w2]</li>
+								<li>author:[name]</li>
+								<li>cache:[domain]</li>
+								<li>contains:[filetype]</li>
+								<li>date:[number]</li>
+								<li>define:[word]</li>
+								<li>ext:[doctype]</li>
+								<li>inanchor:[keyword]</li>
+								<li>index of:[term]</li>
+								<li>info:[domain]</li>
+								<li>link:[keyword]</li>
+								<li>location:[location]</li>
+								<li>phonebook:[name]</li>
+								<li>relate:[domain]</li>
+								<li>safesearch:[keyword]</li>
+								<li>source:[news]</li>
+								<li>site:[domain]</li>
+								<li>stock:[stock]</li>
+								<li>weather:[location]</li>
+                            </ul>
+                        </td>
+						<td>
+                            <ul>
+                                <li>inurl:(html | php)</li>
+								<li>How to * a computer</li>
+								<li>"google"</li>
+								<li>1..100</li>
+								<li>-site:youtube.com</li>
+								<li>+site:youtube.com</li>
+								<li>"google" | "yahoo"</li>
+								<li>~book</li>
+								<li>@instagram</li>
+								<li>after:2020-06-03</li>
+								<li>before:2020-06-03</li>
+								<li>allintitle:dog cat</li>
+								<li>allinurl:search com</li>
+								<li>allintext:phy sci math</li>
+								<li>hex AROUND(5) bad</li>
+								<li>author:Max</li>
+								<li>cache:google.com</li>
+								<li>contains:pdf</li>
+								<li>date:3</li>
+								<li>define:funny</li>
+								<li>ext:pdf</li>
+								<li>inanchor:security</li>
+								<li>index of:mp4 videos</li>
+								<li>info:google.com</li>
+								<li>link:google</li>
+								<li>location:USA</li>
+								<li>phonebook:"john doe"</li>
+								<li>relate:google.com</li>
+								<li>safesearch:sex</li>
+								<li>source:theguardian</li>
+								<li>site:google.com</li>
+								<li>stock:dax</li>
+								<li>weather:Miami</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </figure>
+    </div>
+</body>
+</html>
